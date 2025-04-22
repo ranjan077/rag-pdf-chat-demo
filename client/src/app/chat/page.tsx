@@ -15,9 +15,8 @@ const ChatPage: React.FC = () => {
       const formData = new FormData();
       if (el.files?.length && el.files?.length > 0) {
         const files = [...el.files];
-        files.forEach((file, index) => {
-          formData.append("files[]", files[index]);
-        });
+        console.log("files: ", files);
+        formData.append("file", files[0]);
       }
       uploadFile(formData);
     };
