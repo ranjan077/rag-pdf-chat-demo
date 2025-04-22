@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const multer = require("multer");
 const bodyParser = require("body-parser");
+const { Queue } = require("bullmq");
 const path = require("path");
 
 const port = process.env.PORT;
@@ -20,12 +21,13 @@ const storage = multer.diskStorage({
 
 // Create the multer upload middleware
 const upload = multer({ storage: storage });
+const uploadedFilesQue = new Queue("files");
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.post("/upload/pdf", upload.single("file"), (req, res) => {
+app.post("/upload/pdf", upload.single("file"), async (req, res) => {
   const file = req.file; // Access the uploaded file through req.file
 
   if (!file) {
@@ -33,7 +35,7 @@ app.post("/upload/pdf", upload.single("file"), (req, res) => {
   }
 
   console.log("File uploaded:", file);
-
+  await uploadedFilesQue.add("file_uploaded", file);
   // Respond with file details
   return res.json({
     message: "File uploaded successfully",
