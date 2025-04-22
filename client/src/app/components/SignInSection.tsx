@@ -7,7 +7,7 @@ const SignInSection: React.FC = () => {
   const { isLoaded } = useSignIn();
   return (
     <div className="flex items-center justify-center h-screen">
-      {isLoaded ? <SignIn /> : "loading..."}
+      {isLoaded ? <SignIn routing="hash" /> : "loading..."}
     </div>
   );
 };
